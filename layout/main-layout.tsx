@@ -35,7 +35,7 @@ export function MainLayout({ className, children }: SidebarProps) {
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1">
         <div className="container mx-auto p-6">
           {children}
         </div>

@@ -30,7 +30,6 @@ import {
 import { Pagination } from "@/components/admin/pagination"
 import { UserDetailDialog } from "@/components/admin/user-detail-dialog"
 import { MoreHorizontal, Pencil, Trash2, UserCog, Eye, CheckCircle, XCircle, Download } from "lucide-react"
-import { toast } from "@/components/ui/use-toast"
 import { AdminService } from "@/services/admin.service"
 
 interface User {
@@ -87,11 +86,6 @@ export function UsersTable() {
       setTotalUsers(data.total)
     } catch (error) {
       console.error("Error fetching users:", error)
-      toast({
-        title: "Lỗi",
-        description: "Không thể tải danh sách người dùng. Vui lòng thử lại sau.",
-        variant: "destructive",
-      })
     } finally {
       setLoading(false)
     }
@@ -128,17 +122,8 @@ export function UsersTable() {
     try {
       await AdminService.deleteUser(userToDelete)
       setUsers(users.filter((user) => user.user_id !== userToDelete))
-      toast({
-        title: "Thành công",
-        description: "Đã xóa người dùng thành công.",
-      })
     } catch (error) {
       console.error("Error deleting user:", error)
-      toast({
-        title: "Lỗi",
-        description: "Không thể xóa người dùng. Vui lòng thử lại sau.",
-        variant: "destructive",
-      })
     } finally {
       setIsDeleteDialogOpen(false)
       setUserToDelete(null)
@@ -154,17 +139,8 @@ export function UsersTable() {
     try {
       await AdminService.updateUserStatus(userId, !currentStatus)
       setUsers(users.map((user) => (user.user_id === userId ? { ...user, is_active: !currentStatus } : user)))
-      toast({
-        title: "Thành công",
-        description: `Đã ${!currentStatus ? "kích hoạt" : "vô hiệu hóa"} người dùng.`,
-      })
     } catch (error) {
       console.error("Error updating user status:", error)
-      toast({
-        title: "Lỗi",
-        description: "Không thể cập nhật trạng thái người dùng. Vui lòng thử lại sau.",
-        variant: "destructive",
-      })
     }
   }
 
@@ -178,17 +154,8 @@ export function UsersTable() {
       await AdminService.deleteUsers(selectedUsers)
       setUsers(users.filter((user) => !selectedUsers.includes(user.user_id)))
       setSelectedUsers([])
-      toast({
-        title: "Thành công",
-        description: `Đã xóa ${selectedUsers.length} người dùng.`,
-      })
     } catch (error) {
       console.error("Error deleting users:", error)
-      toast({
-        title: "Lỗi",
-        description: "Không thể xóa người dùng. Vui lòng thử lại sau.",
-        variant: "destructive",
-      })
     } finally {
       setIsMultiDeleteDialogOpen(false)
     }
@@ -205,17 +172,8 @@ export function UsersTable() {
       a.click()
       window.URL.revokeObjectURL(url)
       document.body.removeChild(a)
-      toast({
-        title: "Thành công",
-        description: "Đã xuất dữ liệu người dùng.",
-      })
     } catch (error) {
       console.error("Error exporting users:", error)
-      toast({
-        title: "Lỗi",
-        description: "Không thể xuất dữ liệu người dùng. Vui lòng thử lại sau.",
-        variant: "destructive",
-      })
     }
   }
 

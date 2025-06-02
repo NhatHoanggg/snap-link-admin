@@ -11,6 +11,8 @@ import {
   ChevronRight,
   Users,
   BookOpen,
+  Shell,
+  CreditCard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -39,6 +41,16 @@ const adminItems = [
     href: "/bookings",
     icon: BookOpen,
   },
+  {
+    title: "Requests",
+    href: "/requests",
+    icon: Shell,
+  },
+  {
+    title: "Payments",
+    href: "/payments",
+    icon: CreditCard,
+  }
 ];
 
 interface SidebarProps {
