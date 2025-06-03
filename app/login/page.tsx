@@ -2,7 +2,6 @@
 
 import type React from "react"
 import { useState } from "react"
-import Link from "next/link"
 import { motion } from "framer-motion"
 import { Eye, EyeOff, Lock, Mail, LinkIcon } from "lucide-react"
 import Image from "next/image"
@@ -10,9 +9,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/services/auth"
-import { signIn } from "next-auth/react"
 
 export default function LoginPage() {
   const { login } = useAuth()
@@ -47,10 +44,6 @@ export default function LoginPage() {
     } finally {
       setIsLoading(false)
     }
-  }
-
-  const handleGoogleSignIn = () => {
-    signIn("google", { callbackUrl: "/google-token" })
   }
 
   return (
@@ -168,12 +161,6 @@ export default function LoginPage() {
                       <Label htmlFor="password" className="text-sm font-medium text-foreground">
                         Mật khẩu
                       </Label>
-                      <Link
-                        href="/auth/forgot-password"
-                        className="text-xs font-medium text-primary hover:text-primary/80"
-                      >
-                        Quên mật khẩu?
-                      </Link>
                     </div>
                     <div className="relative">
                       <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
@@ -207,32 +194,9 @@ export default function LoginPage() {
                   {isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
                 </Button>
 
-                <div className="relative flex items-center justify-center">
-                  <Separator className="w-full bg-border" />
-                  <span className="absolute bg-background px-2 text-xs text-muted-foreground">HOẶC TIẾP TỤC VỚI</span>
-                </div>
-
-                <div className="flex flex-col gap-3">
-                  <Button
-                    variant="outline"
-                    type="button"
-                    className="h-12 w-full border-border hover:bg-muted text-foreground"
-                    onClick={handleGoogleSignIn}
-                  >
-                    <Image src="/media/google.svg" alt="Google" width={20} height={20} className="mr-2 h-5 w-5" />
-                    Đăng nhập với Google
-                  </Button>
-                </div>
+               
               </form>
 
-              <div className="mt-8 text-center">
-                <p className="text-sm text-muted-foreground">
-                  Không có tài khoản?{" "}
-                  <Link href="/auth/register" className="font-medium text-primary hover:text-primary/80">
-                    Đăng ký ngay
-                  </Link>
-                </p>
-              </div>
             </motion.div>
           </div>
         </div>
