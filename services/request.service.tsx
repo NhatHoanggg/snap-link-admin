@@ -26,6 +26,6 @@ export interface RequestResponse {
     offers: OfferResponse[];
 }
 
-export function getRequests(status: string): Promise<RequestResponse[]> {
-    return axiosInstance.get(`/admin/requests?status=${status}`)
+export function getRequests() {
+    return axiosInstance.get(`/admin/requests`)
 }

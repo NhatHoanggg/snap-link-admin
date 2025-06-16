@@ -13,6 +13,7 @@ import {
   BookOpen,
   Shell,
   CreditCard,
+  MessageSquareHeart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -50,7 +51,12 @@ const adminItems = [
     title: "Payments",
     href: "/payments",
     icon: CreditCard,
-  }
+  },
+  {
+    title: "Reviews",
+    href: "/reviews",
+    icon: MessageSquareHeart ,
+  },
 ];
 
 interface SidebarProps {

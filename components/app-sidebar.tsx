@@ -1,4 +1,4 @@
-import { House, LogOut, Users, BookOpen } from "lucide-react"
+import { House, LogOut, Users, BookOpen, MessageSquareHeart  } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { useAuth } from "@/services/auth"
 import { ModeToggle } from "@/components/mode-toggle"
@@ -30,6 +30,11 @@ const adminItems = [
     title: "Bookings",
     href: "/bookings",
     icon: BookOpen,
+  },
+  {
+    title: "Reviews",
+    href: "/reviews",
+    icon: MessageSquareHeart ,
   },
 ]
 

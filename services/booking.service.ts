@@ -20,12 +20,12 @@ export interface BookingResponse {
   province: string
 }
 
-export function getBookings(status: string): Promise<BookingResponse[]> {
-  return axiosInstance.get(`/admin/bookings?status=${status}`)
+export function getBookings() {
+  return axiosInstance.get(`/admin/bookings`)
 }
 
-export function getBookingById(booking_id: number): Promise<BookingResponse> {
-  return axiosInstance.get(`/admin/bookings/${booking_id}`)
+export function getBookingByCode(booking_code: string): Promise<BookingResponse> {
+  return axiosInstance.get(`/admin/bookings/${booking_code}`)
 }
 
 
