@@ -57,6 +57,18 @@ export interface MonthlyComparison {
   };
 }
 
+export interface QRCreate{
+  bank_name: string;
+  account_number: string;
+  amount: number;
+  addition_info: string;
+}
+
+export interface PaymentInfo{
+  bank_name: string;
+  account_number: string;
+}
+
 export async function getPaymentHistory() {
   const response = await axiosInstance.get<PaymentHistoryResponse>('/admin/payments');
   return response.data;
@@ -69,5 +81,15 @@ export async function getPaymentStatistics() {
 
 export async function getMonthlyComparison() {
   const response = await axiosInstance.get<MonthlyComparison>('/admin/payments/monthly-comparison');
+  return response.data;
+}
+
+export async function createQR(data: QRCreate ) {
+  const response = await axiosInstance.post('/photographers/qr', data);
+  return response.data;
+}
+
+export async function getPaymentInfo(photographer_id: number) {
+  const response = await axiosInstance.get(`/admin/photographers/payment-info?photographer_id=${photographer_id}`);
   return response.data;
 }

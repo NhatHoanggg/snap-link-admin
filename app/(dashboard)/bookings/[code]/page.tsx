@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { format, parseISO } from "date-fns";
-// import { vi } from "date-fns/locale"
+import { vi } from "date-fns/locale"
 import Image from "next/image";
 import { Calendar, Camera, MapPin, MapPinned, Clock, Tag, User } from "lucide-react";
 import Link from "next/link";
@@ -26,6 +26,7 @@ import {
   type Photographer,
 } from "@/services/photographer.service";
 import { userService, type UserProfileResponse } from "@/services/user.service";
+import { getPaymentInfo, createQR, type PaymentInfo } from "@/services/payment.service";
 
 type Booking = BookingResponse;
 
@@ -93,6 +94,8 @@ export default function BookingDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [photographer, setPhotographer] = useState<Photographer | null>(null);
   const [customer, setCustomer] = useState<UserProfileResponse | null>(null);
+  const [paymentInfo, setPaymentInfo] = useState<PaymentInfo | null>(null);
+  const [creatingQR, setCreatingQR] = useState(false);
   const bookingCode =
     typeof params.code === "string"
       ? params.code
@@ -146,10 +149,41 @@ export default function BookingDetailPage() {
     fetchCustomer();
   }, [booking?.customer_id]);
 
+  useEffect(() => {
+    const fetchPaymentInfo = async () => {
+      if (booking?.photographer_id) {
+        try {
+          const data = await getPaymentInfo(booking.photographer_id);
+          setPaymentInfo(data);
+        } catch {}
+      }
+    };
+    fetchPaymentInfo();
+  }, [booking?.photographer_id]);
+
   const getImageUrl = (url: string | null) => {
     if (!url)
       return "https://res.cloudinary.com/dy8p5yjsd/image/upload/v1748164460/23101740_6725295_ru1wsv.jpg";
     return url;
+  };
+
+  const handleCreateQR = async () => {
+    if (!paymentInfo || !booking) return;
+    setCreatingQR(true);
+    try {
+      const qrData = {
+        bank_name: paymentInfo.bank_name,
+        account_number: paymentInfo.account_number,
+        amount: booking.total_price,
+        addition_info: `Thanh toan ${booking.booking_code}`
+      };
+      const res = await createQR(qrData);
+      if (res.qr_url) {
+        window.open(res.qr_url, '_blank');
+      }
+    } finally {
+      setCreatingQR(false);
+    }
   };
 
   if (loading) {
@@ -254,8 +288,8 @@ export default function BookingDetailPage() {
                   <div>
                     <h3 className="font-medium">Ngày chụp</h3>
                     <p className="text-muted-foreground">
-                      {/* {format(parseISO(booking.booking_date), "EEEE, dd/MM/yyyy", { locale: vi })} */}
-                      {booking.booking_date}
+                      {format(parseISO(booking.booking_date), "EEEE, dd/MM/yyyy", { locale: vi })}
+                      {/* {booking.booking_date} */}
                     </p>
                   </div>
                 </div>
@@ -426,6 +460,9 @@ export default function BookingDetailPage() {
                 </p>
               </div>
             </div>
+            <Button onClick={handleCreateQR} disabled={creatingQR || !paymentInfo || !booking.total_price}>
+              {creatingQR ? "Đang tạo QR..." : "Tạo thanh toán"}
+            </Button>
           </CardContent>
         </Card>
       </div>
