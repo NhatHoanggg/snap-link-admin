@@ -33,6 +33,23 @@ export interface PhotographerReviews{
     reviews: ReviewResponse[];
 }
 
+export interface Review{
+    rating: number;
+    comment: string;
+    review_id: number;
+    booking_id: number;
+    customer_id: number;
+    photographer_id: number;
+    created_at: string;
+    customer_name: string | null;
+    customer_avatar: string | null;
+}
+
+export interface ReviewResponse{
+    total: number,
+    reviews: Review[]
+}
+
 export const createReview = async (review: ReviewCreate) => {
     try {
         const response = await axiosInstance.post<ReviewResponse>('/reviews', review);
@@ -60,14 +77,14 @@ export const editReview = async (review_id: number, review: ReviewEdit) => {
     }
 }
 
-export const deleteReview = async (review_id: number) => {
-    try {
-        const response = await axiosInstance.delete<ReviewResponse>(`/reviews/${review_id}`);
-        return response.data;
-    } catch (error) {
-        throw error;
-    }
-}
+// export const deleteReview = async (review_id: number) => {
+//     try {
+//         const response = await axiosInstance.delete<ReviewResponse>(`/reviews/${review_id}`);
+//         return response.data;
+//     } catch (error) {
+//         throw error;
+//     }
+// }
 
 export const isReviewed = async (booking_id: number) => {
     try {
@@ -78,3 +95,21 @@ export const isReviewed = async (booking_id: number) => {
     }
 }
 
+export const getReviews = async () => {
+    try {
+        const response = await axiosInstance.get(`admin/reviews`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+export const deleteReview = async (review_id: number) => {
+    try {
+        const response = await axiosInstance.delete(`admin/reviews/${review_id}`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}

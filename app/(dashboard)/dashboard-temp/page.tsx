@@ -38,3 +38,7 @@
 //     </div>
 //   )
 // }
+
+export default function AdminDashboardPage() {
+    <h1>default</h1>
+}

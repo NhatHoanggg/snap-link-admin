@@ -57,10 +57,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const response = await apiLogin({ email, password })
       const { access_token, refresh_token, user } = response
-      
+      if (user.role != "admin") {
+        console.log("Khong phai admin");
+        router.push("/login")
+      }
       localStorage.setItem("token", access_token)
       localStorage.setItem("refreshToken", refresh_token)
       localStorage.setItem("user", JSON.stringify(user))
+     
       setUser(user)
       setToken(access_token)
       router.push("/dashboard")
