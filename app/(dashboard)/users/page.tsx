@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react'
 import { AdminService, type User } from "@/services/admin.service"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -10,15 +9,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-// import { toast } from "@/components/ui/use-toast"
 import toast, { Toaster } from "react-hot-toast"
-import { Search, Users, Camera, MapPin, Calendar, Mail, Phone } from "lucide-react"
+import { Users, Camera, MapPin, Calendar, Mail, Phone } from "lucide-react"
+// import { Input } from "@/components/ui/input"
 
 export default function UserManagementPage() {
   const [users, setUsers] = useState<User[]>([])
   const [filteredUsers, setFilteredUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState("")
+  // const [searchTerm, setSearchTerm] = useState("")
   const [selectedRole, setSelectedRole] = useState<string>("all")
   const [updatingUsers, setUpdatingUsers] = useState<Set<number>>(new Set())
 
@@ -32,17 +31,11 @@ export default function UserManagementPage() {
           page: 1,
           limit: 100,
           role: selectedRole === "all" ? undefined : selectedRole,
-          search: searchTerm || undefined
         })
         setUsers(userData.users)
         setFilteredUsers(userData.users)
       } catch (error) {
         console.error('Error fetching users:', error)
-        // toast({
-        //   title: "Lỗi",
-        //   description: "Không thể tải danh sách người dùng",
-        //   variant: "destructive",
-        // })
       } finally {
         setLoading(false)
       }
@@ -55,20 +48,12 @@ export default function UserManagementPage() {
   useEffect(() => {
     let filtered = users
 
-    if (searchTerm) {
-      filtered = filtered.filter(user =>
-        user.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.phone_number.includes(searchTerm)
-      )
-    }
-
     if (selectedRole !== "all") {
       filtered = filtered.filter(user => user.role === selectedRole)
     }
 
     setFilteredUsers(filtered)
-  }, [users, searchTerm, selectedRole])
+  }, [users, selectedRole])
 
   // Update user status
   const handleStatusUpdate = async (userId: number, newStatus: boolean) => {
@@ -191,12 +176,12 @@ export default function UserManagementPage() {
         <CardHeader>
           <CardTitle>Danh sách người dùng</CardTitle>
           <CardDescription>
-            Tìm kiếm và quản lý tài khoản người dùng
+            Xem và quản lý tài khoản người dùng
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4">
-            <div className="flex-1">
+            {/* <div className="flex-1">
               <Label htmlFor="search">Tìm kiếm</Label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -208,7 +193,7 @@ export default function UserManagementPage() {
                   className="pl-10"
                 />
               </div>
-            </div>
+            </div> */}
             <div className="w-full md:w-48">
               <Label htmlFor="role">Vai trò</Label>
               <Select value={selectedRole} onValueChange={setSelectedRole}>
@@ -281,10 +266,10 @@ export default function UserManagementPage() {
                     </div>
                   </TableCell>
                   <TableCell>
-                    {user.location ? (
+                    {user.province ? (
                       <div className="flex items-center space-x-1 text-sm">
                         <MapPin className="h-3 w-3" />
-                        <span>{user.location}</span>
+                        <span>{user.province}</span>
                       </div>
                     ) : (
                       <span className="text-muted-foreground">Chưa cập nhật</span>

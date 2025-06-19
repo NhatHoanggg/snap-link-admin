@@ -4,7 +4,9 @@ export interface User {
   email: string
   full_name: string
   phone_number: string
-  location: string | null
+  province: string | null
+  district: string | null
+  ward: string | null
   user_id: number
   role: string
   created_at: string
@@ -17,6 +19,13 @@ export interface User {
 export interface UsersResponse {
   total: number
   users: User[]
+}
+export interface AdminDashboard {
+  total_users: number,
+  total_photographers: number,
+  total_bookings: number,
+  total_requests: number,
+  total_revenue: number
 }
 
 export const AdminService = {
@@ -90,5 +99,10 @@ export const AdminService = {
       console.error('Error exporting users:', error)
       throw error
     }
-  }
+  },
+
+  async getDashboard() {
+    const response = await axiosInstance.get(`/admin/dashboard`)
+    return response.data
+  },
 } 

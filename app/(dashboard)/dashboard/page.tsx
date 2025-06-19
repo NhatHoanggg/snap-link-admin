@@ -1,40 +1,58 @@
-import { Suspense } from "react"
-import type { Metadata } from "next"
-import { DashboardCards } from "@/components/admin/dashboard/dashboard-cards"
-import { DashboardCharts } from "@/components/admin/dashboard/dashboard-charts"
-import { RecentActivities } from "@/components/admin/dashboard/recent-activities"
-import { QuickActions } from "@/components/admin/dashboard/quick-actions"
-import { DashboardCardsSkeleton } from "@/components/admin/dashboard/dashboard-cards-skeleton"
-import { DashboardChartsSkeleton } from "@/components/admin/dashboard/dashboard-charts-skeleton"
-import { RecentActivitiesSkeleton } from "@/components/admin/dashboard/recent-activities-skeleton"
+'use client'
 
-export const metadata: Metadata = {
-  title: "Dashboard | Admin",
-  description: "Tổng quan hệ thống",
-}
+import React, { useEffect, useState } from 'react'
+import { AdminService, AdminDashboard } from '@/services/admin.service'
+import { getBookingDistribution, BookingDistribution } from '@/services/booking.service'
+import { getRequestDistribution, RequestDistribution } from '@/services/request.service'
+import { DashboardCards } from '@/components/admin/dashboard/dashboard-cards'
+import { DashboardCardsSkeleton } from '@/components/admin/dashboard/dashboard-cards-skeleton'
+import { DashboardCharts } from '@/components/admin/dashboard/dashboard-charts'
+import { DashboardChartsSkeleton } from '@/components/admin/dashboard/dashboard-charts-skeleton'
 
-export default function AdminDashboardPage() {
+export default function DashboardPage() {
+  const [dashboard, setDashboard] = useState<AdminDashboard | null>(null)
+  const [bookingDist, setBookingDist] = useState<BookingDistribution | null>(null)
+  const [requestDist, setRequestDist] = useState<RequestDistribution | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true)
+      try {
+        const [dashboardData, bookingData, requestData] = await Promise.all([
+          AdminService.getDashboard(),
+          getBookingDistribution(),
+          getRequestDistribution(),
+        ])
+        setDashboard(dashboardData)
+        setBookingDist(bookingData)
+        setRequestDist(requestData)
+      } catch (err) {
+        console.error(err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchData()
+  }, [])
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Tổng quan về hệ thống của bạn.</p>
-        </div>
-        <QuickActions />
-      </div>
-
-      <Suspense fallback={<DashboardCardsSkeleton />}>
-        <DashboardCards />
-      </Suspense>
-
-      <Suspense fallback={<DashboardChartsSkeleton />}>
-        <DashboardCharts />
-      </Suspense>
-
-      <Suspense fallback={<RecentActivitiesSkeleton />}>
-        <RecentActivities />
-      </Suspense>
+    <div className="space-y-8">
+      {loading || !dashboard ? <DashboardCardsSkeleton /> : (
+        <DashboardCards
+          totalUsers={dashboard.total_users}
+          totalPhotographers={dashboard.total_photographers}
+          totalBookings={dashboard.total_bookings}
+          totalRevenue={dashboard.total_revenue}
+        />
+      )}
+      {loading || !bookingDist || !requestDist ? <DashboardChartsSkeleton /> : (
+        <DashboardCharts bookingDist={bookingDist as unknown as Record<string, number>} requestDist={requestDist as unknown as Record<string, number>} />
+      )}
     </div>
   )
 }

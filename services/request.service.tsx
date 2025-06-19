@@ -26,6 +26,16 @@ export interface RequestResponse {
     offers: OfferResponse[];
 }
 
+export interface RequestDistribution{
+    open:number;
+    matched: number;
+}
+
 export function getRequests() {
     return axiosInstance.get(`/admin/requests`)
+}
+
+export async function getRequestDistribution() {
+    const response = await axiosInstance.get(`/admin/distribution/request`)
+    return response.data
 }

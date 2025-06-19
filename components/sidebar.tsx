@@ -83,7 +83,7 @@ export function Sidebar({ isCollapsed, onCollapse }: SidebarProps) {
         {/* Logo + Collapse Button */}
         <div className="flex h-14 items-center justify-between px-2">
           <Link 
-            href="/home" 
+            href="/dashboard" 
             className={cn(
               "flex items-center gap-2 font-semibold transition-all duration-300",
               isCollapsed ? "justify-center w-full" : ""

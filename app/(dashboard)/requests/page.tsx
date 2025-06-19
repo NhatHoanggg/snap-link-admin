@@ -79,6 +79,19 @@ export default function RequestList() {
     }
   }
 
+  const getStatusLabel = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'matched':
+        return 'Đã ghép';
+      case 'open':
+        return 'Mở';
+      case 'accepted':
+        return 'Đã chấp nhận đề xuất';
+      default:
+        return status;
+    }
+  }
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("vi-VN", {
       year: "numeric",
@@ -212,7 +225,7 @@ export default function RequestList() {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge className={getStatusColor(request.status)}>{request.status}</Badge>
+                    <Badge className={getStatusColor(request.status)}>{getStatusLabel(request.status)}</Badge>
                   </TableCell>
                   <TableCell>
                     <Dialog>
@@ -225,7 +238,7 @@ export default function RequestList() {
                         <DialogHeader>
                           <DialogTitle>Chi tiết Yêu cầu #{request.request_code}</DialogTitle>
                         </DialogHeader>
-                        {selectedRequest && <RequestDetail request={selectedRequest} />}
+                        {selectedRequest && <RequestDetail request={selectedRequest} getStatusLabel={getStatusLabel} />}
                       </DialogContent>
                     </Dialog>
                   </TableCell>
@@ -243,7 +256,7 @@ export default function RequestList() {
             <CardHeader className="pb-3">
               <div className="flex justify-between items-start">
                 <CardTitle className="text-lg">#{request.request_code}</CardTitle>
-                <Badge className={getStatusColor(request.status)}>{request.status}</Badge>
+                <Badge className={getStatusColor(request.status)}>{getStatusLabel(request.status)}</Badge>
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -287,7 +300,7 @@ export default function RequestList() {
                   <DialogHeader>
                     <DialogTitle>Chi tiết Yêu cầu #{request.request_code}</DialogTitle>
                   </DialogHeader>
-                  {selectedRequest && <RequestDetail request={selectedRequest} />}
+                  {selectedRequest && <RequestDetail request={selectedRequest} getStatusLabel={getStatusLabel} />}
                 </DialogContent>
               </Dialog>
             </CardContent>
@@ -308,7 +321,7 @@ export default function RequestList() {
   )
 }
 
-function RequestDetail({ request }: { request: RequestResponse }) {
+function RequestDetail({ request, getStatusLabel }: { request: RequestResponse, getStatusLabel?: (status: string) => string }) {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("vi-VN", {
       year: "numeric",
@@ -375,7 +388,7 @@ function RequestDetail({ request }: { request: RequestResponse }) {
           <div>
             <label className="text-sm font-medium text-muted-foreground">Trạng thái</label>
             <div className="mt-1">
-              <Badge className={getStatusColor(request.status)}>{request.status}</Badge>
+              <Badge className={getStatusColor(request.status)}>{getStatusLabel ? getStatusLabel(request.status) : request.status}</Badge>
             </div>
           </div>
           <div>
@@ -427,7 +440,7 @@ function RequestDetail({ request }: { request: RequestResponse }) {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Trạng thái</p>
-                      <Badge className={getStatusColor(offer.status)}>{offer.status}</Badge>
+                      <Badge className={getStatusColor(offer.status)}>{getStatusLabel ? getStatusLabel(offer.status) : offer.status}</Badge>
                     </div>
                     {offer.message && (
                       <div>

@@ -21,6 +21,14 @@ export interface BookingResponse {
   payment_status: string | null
 }
 
+export interface BookingDistribution{
+  confirm:number;
+  completed: number;
+  pending: number;
+  cancelled: number;
+  accepted: number;
+}
+
 export function getBookings() {
   return axiosInstance.get(`/admin/bookings`)
 }
@@ -35,6 +43,9 @@ export async function getBookingByCode(booking_code: string) {
   return response.data
 }
 
-
+export async function getBookingDistribution() {
+  const response = await axiosInstance.get(`/admin/distribution/booking`)
+  return response.data
+}
 
 
