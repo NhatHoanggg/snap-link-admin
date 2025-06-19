@@ -18,14 +18,21 @@ export interface BookingResponse {
   total_price: number
   discount_code: string
   province: string
+  payment_status: string | null
 }
 
 export function getBookings() {
   return axiosInstance.get(`/admin/bookings`)
 }
 
-export function getBookingByCode(booking_code: string): Promise<BookingResponse> {
-  return axiosInstance.get(`/admin/bookings/${booking_code}`)
+export async function getMyBookingsByStatus(status: string) {
+  const response = await axiosInstance.get(`/admin/bookings/status/${status}`)
+  return response.data
+}
+
+export async function getBookingByCode(booking_code: string) {
+  const response = await axiosInstance.get(`/admin/bookings/code/${booking_code}`)
+  return response.data
 }
 
 

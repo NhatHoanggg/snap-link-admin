@@ -500,7 +500,7 @@ function PaymentDetail({ payment }: { payment: Payment }) {
       <Separator />
 
       {/* Actions */}
-      <div className="flex gap-2 justify-end">
+      {/* <div className="flex gap-2 justify-end">
         <Button variant="outline">
           <Download className="h-4 w-4 mr-2" />
           Tải hóa đơn
@@ -509,7 +509,7 @@ function PaymentDetail({ payment }: { payment: Payment }) {
           <CreditCard className="h-4 w-4 mr-2" />
           Xem booking
         </Button>
-      </div>
+      </div> */}
     </div>
   )
 }
